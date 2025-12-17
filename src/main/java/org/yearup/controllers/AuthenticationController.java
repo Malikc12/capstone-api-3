@@ -90,6 +90,11 @@ public class AuthenticationController {
         }
         catch (Exception e)
         {
+            System.out.println("==========================================");
+            System.out.println("REGISTER ERROR: " + e.getMessage());
+            System.out.println("Error type: " + e.getClass().getName());
+            e.printStackTrace();
+            System.out.println("==========================================");
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }

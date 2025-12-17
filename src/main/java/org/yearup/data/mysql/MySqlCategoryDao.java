@@ -23,7 +23,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
                 FROM categories;
                 """;
 
-        try (Connection conn = super.getConnection();
+        try (Connection conn = getConnection();
              PreparedStatement statement = conn.prepareStatement(sql);
              ResultSet rs = statement.executeQuery()) {
             List<Category> categories = new ArrayList<>();
@@ -45,7 +45,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
         // get category by id
         String sql = "SELECT category_id, name, description FROM categories WHERE category_id = ?";
 
-        try (Connection conn = super.getConnection();
+        try (Connection conn = getConnection();
              PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setInt(1, categoryId);
 
