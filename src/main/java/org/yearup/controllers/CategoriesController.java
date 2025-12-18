@@ -18,7 +18,7 @@ import java.util.List;
 // add annotation to allow cross site origin requests
 
 @RestController
-@RequestMapping("categories")
+@RequestMapping("/categories")
 @CrossOrigin
 public class CategoriesController {
     private CategoryDao categoryDao;
@@ -35,42 +35,28 @@ public class CategoriesController {
     // add the appropriate annotation for a get action
     @GetMapping("")
     @PreAuthorize("permitAll()")
-    public List<Category> getAll()
-    {
-        try
-        {
+    public List<Category> getAllCategories() {
+        // find and return all categories
         return categoryDao.getAllCategories();
     }
-    catch(Exception ex)
-    {
-        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
-    }
-}
-        // find and return all categories
-
+    // find and return all categories
 
 
     // add the appropriate annotation for a get action
     @GetMapping("/{id}")
     @PreAuthorize("permitAll()")
-    public Category getById(@PathVariable int id)
-    {
+    public Category getById(@PathVariable int id) {
         // get the category by id
-        try
-        {
+        try {
             var category = categoryDao.getById(id);
 
-            if(category == null)
+            if (category == null)
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
             return category;
-        }
-        catch(ResponseStatusException ex)
-        {
+        } catch (ResponseStatusException ex) {
             throw ex;
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
@@ -79,22 +65,16 @@ public class CategoriesController {
     // https://localhost:8080/categories/1/products
     @GetMapping("/{categoryId}/products")
     @PreAuthorize("permitAll()")
-    public List<Product> getProductsById(@PathVariable int categoryId)
-    {
-        try
-        {
+    public List<Product> getProductsById(@PathVariable int categoryId) {
+        try {
             var category = categoryDao.getById(categoryId);
             if (category == null)
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
             return productDao.listByCategoryId(categoryId);
-        }
-        catch (ResponseStatusException ex)
-        {
+        } catch (ResponseStatusException ex) {
             throw ex;
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
         // get a list of product by categoryId
@@ -103,30 +83,30 @@ public class CategoriesController {
     // add annotation to call this method for a POST action
     // add annotation to ensure that only an ADMIN can call this function
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public Category addCategory(@RequestBody Category category)
-    {
-        // insert the category
-        System.out.println("im here");
-        try
-        {
-            return categoryDao.create(category);
-        }
-        catch(Exception ex)
-        {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+    public Category addCategory(@RequestBody Category category) {
+        if (category == null || category.getName() == null || category.getName().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            // insert the category
+
+            try {
+                return categoryDao.create(category);
+            } catch (ResponseStatusException ex) {
+                throw ex;
+            } catch (Exception ex) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+            }
         }
     }
-
     // add annotation to call this method for a PUT (update) action - the url path must include the categoryId
     // add annotation to ensure that only an ADMIN can call this function
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateCategory(@PathVariable int id, @RequestBody Category category)
-    {
-        // update the category by id
+        {
+            // update the category by id
 
         try
         {
