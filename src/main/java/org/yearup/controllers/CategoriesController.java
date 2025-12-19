@@ -88,40 +88,35 @@ public class CategoriesController {
     public Category addCategory(@RequestBody Category category) {
         if (category == null || category.getName() == null || category.getName().isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-            // insert the category
-
-            try {
-                return categoryDao.create(category);
-            } catch (ResponseStatusException ex) {
-                throw ex;
-            } catch (Exception ex) {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
-            }
         }
+        // insert the category
+        try {
+            return categoryDao.create(category);
+        } catch (ResponseStatusException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+        }
+
     }
+
     // add annotation to call this method for a PUT (update) action - the url path must include the categoryId
     // add annotation to ensure that only an ADMIN can call this function
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateCategory(@PathVariable int id, @RequestBody Category category)
-        {
-            // update the category by id
+    public void updateCategory(@PathVariable int id, @RequestBody Category category) {
+        // update the category by id
 
-        try
-        {
+        try {
             var existing = categoryDao.getById(id);
-            if(existing == null)
+            if (existing == null)
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
             categoryDao.update(id, category);
-        }
-        catch (ResponseStatusException ex)
-        {
+        } catch (ResponseStatusException ex) {
             throw ex;
-        }
-        catch(Exception ex)
-        {
+        } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
@@ -132,25 +127,19 @@ public class CategoriesController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteCategory(@PathVariable int id)
-    {
+    public void deleteCategory(@PathVariable int id) {
         // delete the category by id
 
-        try
-        {
+        try {
             var category = categoryDao.getById(id);
 
-            if(category == null)
+            if (category == null)
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
             categoryDao.delete(id);
-        }
-        catch (ResponseStatusException ex)
-        {
+        } catch (ResponseStatusException ex) {
             throw ex;
-        }
-        catch(Exception ex)
-        {
+        } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
