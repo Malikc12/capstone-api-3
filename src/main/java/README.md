@@ -1,18 +1,13 @@
+EasyShop E-Commerce API
+A full-featured e-commerce REST API built with Spring Boot that powers an online store. This capstone project implements product management, shopping cart functionality, user authentication, and profile management.
+
+
 # Capstone API 3
 
 Capstone API 3 is a Java Spring Boot REST API built as part of a backend capstone project.  
 The application follows a layered architecture using Controllers, DAOs, and Models, and connects to a MySQL database to manage data through RESTful endpoints.
 
----
 
-## Tech Stack
-- Java
-- Spring Boot
-- Maven (Maven Wrapper included)
-- MySQL
-- Insomnia / Postman
-
----
 
 ## Getting Started
 
